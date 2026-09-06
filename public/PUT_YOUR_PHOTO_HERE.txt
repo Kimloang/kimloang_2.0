@@ -1,0 +1,2 @@
+Drop your headshot here as: profile.jpg (square, at least 400x400px works best)
+The site auto-detects it. If missing, it falls back to a generated initials avatar so the page never looks broken.

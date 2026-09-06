@@ -30,8 +30,25 @@ publishes `dist/` to GitHub Pages automatically on every push to `main`.
 4. Push again (or re-run the workflow from the **Actions** tab) — the site
    will be live at `https://<your-username>.github.io/ykloang/`.
 
-## Notes
-- The profile photo URL in `src/App.tsx` originally had an access token in the
-  query string — that expires and shouldn't be committed. It's been stripped
-  here. Better: put the image in `public/` (e.g. `public/profile.jpg`) and
-  reference it as `/profile.jpg` so it's not dependent on an external repo/token.
+## Adding your photo
+Drop a square headshot into `public/profile.jpg` — the page picks it up
+automatically (see `public/PUT_YOUR_PHOTO_HERE.txt`). If it's missing, the
+page falls back to a generated initials avatar so it never looks broken
+during dev or before you add one.
+
+## Adding your résumé
+The "Download résumé" button in the hero points at `/resume.pdf`. Drop your
+actual PDF into `public/resume.pdf` and it'll work as-is.
+
+## What's new in this pass
+- **Boot-sequence hero**: a one-time `curl` / loading beat before the profile
+  resolves — fits the "live API" concept instead of a static page.
+- **Real headshot slot** with automatic fallback avatar (no broken image
+  states, ever).
+- **Stat pills** (years experience, companies, systems shipped) — all
+  computed from the data in `cvData`, not made up.
+- **Status bar** ("all systems operational", region, uptime) — a small,
+  on-brand flourish for a backend engineer's page.
+- **Space Grotesk** for headings, **JetBrains Mono** for code/labels — two
+  deliberate typefaces instead of the default system sans everywhere.
+- **Download résumé** button.
