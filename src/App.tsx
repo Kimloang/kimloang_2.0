@@ -365,7 +365,7 @@ export default function App() {
           <div className="absolute inset-0 opacity-30 z-0" style={{ backgroundImage: "url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdHRlcm4gaWQ9InNtYWxsR3JpZCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNMTAgMEwwIDBMMCAxMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDMpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSJ1cmwoI3NtYWxsR3JpZCkiLz48cGF0aCBkPSJNNDAgMEwwIDBMMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')" }}></div>
 
           {/* Boot sequence — the one deliberate motion moment on the page */}
-          <div className={`font-mono text-xs text-slate-500 mb-6 relative z-10 transition-opacity duration-1000 ${booted ? 'opacity-0 h-0 overflow-hidden mb-0' : 'opacity-100'}`}>
+          <div className={`font-mono text-xs text-slate-500 mb-6 relative z-10 transition-opacity duration-1200 ${booted ? 'opacity-0 h-0 overflow-hidden mb-0' : 'opacity-100'}`}>
             <span className="text-emerald-400">$</span> curl api.kimloang.dev/v1/profile
             <span className="inline-block w-1.5 h-3 bg-emerald-400 ml-1 align-middle animate-pulse" />
           </div>
