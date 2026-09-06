@@ -1,5 +1,6 @@
 import { useState, useEffect, type MouseEvent } from 'react';
 import { Server, Phone, Mail, MapPin, Terminal, ChevronRight, Play, Zap } from 'lucide-react';
+import ykloangAvatar from './assets/yk_loang.jpg';
 
 const GithubIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -267,7 +268,7 @@ export default function App() {
   const [isSimulatingPost, setIsSimulatingPost] = useState(false);
   const [showSkillResponse, setShowSkillResponse] = useState(false);
   const [booted, setBooted] = useState(false);
-  const [avatarSrc, setAvatarSrc] = useState('/profile.jpg');
+  const [avatarSrc, setAvatarSrc] = useState(ykloangAvatar);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
   const roleText = useTypewriter([
