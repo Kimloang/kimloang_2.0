@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type MouseEvent } from 'react';
 import { Server, Phone, Mail, MapPin, Terminal, ChevronRight, Play, Zap } from 'lucide-react';
 
 const GithubIcon = ({ className }: { className?: string }) => (
@@ -203,12 +203,87 @@ const statPills = [
 const AVATAR_FALLBACK =
   'https://ui-avatars.com/api/?name=Yen+Kimloang&background=10141a&color=34d399&bold=true&size=256';
 
+// Cycles through role taglines with a typing/deleting terminal effect.
+function useTypewriter(words: string[], typeMs = 55, pauseMs = 1400) {
+  const [text, setText] = useState('');
+  const [wordIndex, setWordIndex] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    const current = words[wordIndex % words.length];
+    let delay = deleting ? typeMs / 1.6 : typeMs;
+
+    if (!deleting && text === current) {
+      delay = pauseMs;
+    }
+
+    const t = setTimeout(() => {
+      if (!deleting && text === current) {
+        setDeleting(true);
+        return;
+      }
+      if (deleting && text === '') {
+        setDeleting(false);
+        setWordIndex(i => i + 1);
+        return;
+      }
+      setText(current.slice(0, deleting ? text.length - 1 : text.length + 1));
+    }, delay);
+
+    return () => clearTimeout(t);
+  }, [text, deleting, wordIndex, words, typeMs, pauseMs]);
+
+  return text;
+}
+
+// Thematic "live console" footer — fake but clearly stylistic request/latency
+// counters that jitter, matching the mock-API conceit of the rest of the page.
+function ConsoleTicker() {
+  const [reqs, setReqs] = useState(1284);
+  const [latency, setLatency] = useState(42);
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      setReqs(r => r + Math.floor(Math.random() * 3));
+      setLatency(28 + Math.floor(Math.random() * 20));
+    }, 1800);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <div className="border-t border-slate-800/60 bg-[#0a0c10]">
+      <div className="max-w-6xl mx-auto px-6 lg:px-12 xl:px-16 py-5 flex flex-wrap items-center gap-x-8 gap-y-2 text-xs font-mono text-slate-600">
+        <span className="text-slate-500">// this page, watching itself</span>
+        <span>requests served: <span className="text-emerald-400">{reqs.toLocaleString()}</span></span>
+        <span>p50 latency: <span className="text-sky-400">{latency}ms</span></span>
+        <span>build: <span className="text-slate-400">v1.0.0</span></span>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [activeSection, setActiveSection] = useState('profile');
   const [isSimulatingPost, setIsSimulatingPost] = useState(false);
   const [showSkillResponse, setShowSkillResponse] = useState(false);
   const [booted, setBooted] = useState(false);
   const [avatarSrc, setAvatarSrc] = useState('/profile.jpg');
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
+  const roleText = useTypewriter([
+    'Backend Developer Reference',
+    'Java & Spring Boot',
+    'API Performance Tuning',
+    'Oracle · Redis · Kafka',
+  ]);
+
+  const handleAvatarMove = (e: MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ x: py * -14, y: px * 14 });
+  };
+  const resetAvatarTilt = () => setTilt({ x: 0, y: 0 });
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
@@ -243,7 +318,10 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0a0c10] text-slate-300 font-sans flex flex-col md:flex-row selection:bg-sky-500/30">
+    <div className="min-h-screen bg-[#0a0c10] text-slate-300 font-sans flex flex-col md:flex-row selection:bg-sky-500/30 relative">
+      <div className="ambient-orb w-[420px] h-[420px] bg-sky-500/10 top-[-100px] left-[10%]" />
+      <div className="ambient-orb w-[380px] h-[380px] bg-emerald-500/10 top-[40%] right-[5%]" style={{ animationDelay: '-7s' }} />
+      <div className="ambient-orb w-[320px] h-[320px] bg-purple-500/10 bottom-[-80px] left-[30%]" style={{ animationDelay: '-14s' }} />
 
       <nav className="w-full md:w-64 lg:w-72 bg-[#10141a] border-r border-slate-800/60 md:h-screen sticky top-0 flex flex-col shadow-xl z-20">
         <div className="p-6 border-b border-slate-800/60 flex items-center gap-3">
@@ -280,7 +358,7 @@ export default function App() {
         </div>
       </nav>
 
-      <main className="flex-1 overflow-y-auto pb-32">
+      <main className="flex-1 overflow-y-auto pb-32 relative z-10">
         <div className="max-w-6xl mx-auto p-8 lg:p-12 xl:p-16 border-b border-slate-800/60 bg-gradient-to-b from-[#141922] to-transparent relative overflow-hidden">
 
           <div className="absolute inset-0 opacity-30 z-0" style={{ backgroundImage: "url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdHRlcm4gaWQ9InNtYWxsR3JpZCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNMTAgMEwwIDBMMCAxMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDMpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSJ1cmwoI3NtYWxsR3JpZCkiLz48cGF0aCBkPSJNNDAgMEwwIDBMMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')" }}></div>
@@ -292,20 +370,26 @@ export default function App() {
           </div>
 
           <div className={`flex flex-col md:flex-row items-center md:items-start gap-8 relative z-10 transition-all duration-700 ${booted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}>
-            <div className="relative group shrink-0">
+            <div
+              className="relative group shrink-0"
+              style={{ perspective: '600px' }}
+              onMouseMove={handleAvatarMove}
+              onMouseLeave={resetAvatarTilt}
+            >
               <div className="absolute -inset-1 bg-gradient-to-r from-sky-500 via-purple-500 to-emerald-500 rounded-full blur opacity-60 group-hover:opacity-100 transition duration-500"></div>
               <img
                 src={avatarSrc}
                 onError={() => setAvatarSrc(AVATAR_FALLBACK)}
                 alt="Yen Kimloang"
+                style={{ transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`, transition: 'transform 150ms ease-out' }}
                 className="relative w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-[#0a0c10] shadow-2xl shadow-emerald-500/30 z-10"
               />
               <span className="absolute bottom-1 right-1 z-20 w-5 h-5 rounded-full bg-emerald-400 border-4 border-[#0a0c10]" title="Available" />
             </div>
             <div className="text-center md:text-left pt-2 flex-1">
               <h1 className="font-display text-4xl lg:text-5xl font-bold text-white tracking-tight mb-2">Yen Kimloang</h1>
-              <p className="text-xl text-emerald-400 font-medium mb-5 flex items-center justify-center md:justify-start gap-2">
-                <Terminal className="w-5 h-5" /> Backend Developer Reference
+              <p className="text-xl text-emerald-400 font-medium mb-5 flex items-center justify-center md:justify-start gap-2 font-mono min-h-[1.75rem]">
+                <Terminal className="w-5 h-5 shrink-0" /> {roleText}<span className="cursor-blink text-emerald-400">▌</span>
               </p>
 
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-sm text-slate-400 mb-6">
@@ -494,6 +578,8 @@ export default function App() {
           </section>
 
         </div>
+
+        <ConsoleTicker />
       </main>
     </div>
   );
