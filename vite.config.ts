@@ -4,5 +4,5 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/kimloang/', // GitHub Pages project site: <username>.github.io/ykloang
+  base: '/kimloang_2.0/', // GitHub Pages project site: <username>.github.io/ykloang
 })
