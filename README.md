@@ -13,22 +13,25 @@ npm run dev
 This repo already includes `.github/workflows/deploy.yml`, which builds and
 publishes `dist/` to GitHub Pages automatically on every push to `main`.
 
-1. Create a new GitHub repo named **`ykloang`** (must match, since `vite.config.ts`
-   sets `base: '/ykloang/'` for `https://<your-username>.github.io/ykloang`).
-   If you want a different repo name, change `base` in `vite.config.ts` to match.
-2. Push this project:
+Your site is live as a **project site** at `https://kimloang.github.io/kimloang_2.0/`,
+so `vite.config.ts` is set to `base: '/kimloang_2.0/'` to match. If you ever
+rename the repo, update `base` to match the new repo name exactly.
+
+1. Push this project to the **`kimloang_2.0`** repo:
    ```bash
    git init
    git add .
    git commit -m "Initial portfolio"
    git branch -M main
-   git remote add origin https://github.com/<your-username>/ykloang.git
+   git remote add origin https://github.com/kimloang/kimloang_2.0.git
    git push -u origin main
    ```
-3. In the repo on GitHub: **Settings → Pages → Build and deployment → Source**,
-   select **GitHub Actions**.
-4. Push again (or re-run the workflow from the **Actions** tab) — the site
-   will be live at `https://<your-username>.github.io/ykloang/`.
+2. In the repo: **Settings → Pages → Build and deployment → Source** — this
+   **must** be set to **GitHub Actions**, not "Deploy from a branch". If it's
+   left on "branch", GitHub serves your raw source files as-is, which 404s.
+3. Check the **Actions** tab — the "Deploy to GitHub Pages" workflow should
+   run and go green.
+4. The site is live at `https://kimloang.github.io/kimloang_2.0/`.
 
 ## Adding your photo
 Drop a square headshot into `public/profile.jpg` — the page picks it up
